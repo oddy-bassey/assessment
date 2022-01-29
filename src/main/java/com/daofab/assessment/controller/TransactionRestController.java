@@ -21,10 +21,17 @@ import com.daofab.assessment.enums.SortParam;
 import com.daofab.assessment.model.Installment;
 import com.daofab.assessment.model.Transaction;
 import com.daofab.assessment.service.InstallmentService;
-import com.daofab.assessment.service.TransactionService; 
+import com.daofab.assessment.service.TransactionService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor; 
  
+@Tag(name = "Transaction (Parent)")
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/transactions")
 @RestController
@@ -35,8 +42,15 @@ public class TransactionRestController {
 	private final InstallmentService installmentService;
 
 	// get end-point to fetch transactions (Parent.json data) using pagination
+	@Operation(summary = "Get Transaction (Parent data)", responses = {
+            @ApiResponse(description = "Get transaction success", responseCode = "200",
+                    content = @Content(mediaType = "application/json",schema = @Schema(implementation = Transaction.class))),
+            @ApiResponse(description = "No such transaction with id exist",responseCode = "404",content = @Content)
+    })
 	@GetMapping("/{pageNo}/{pageSize}")
-	public ResponseEntity<?> getTransactions(@PathVariable int pageNo, @PathVariable int pageSize,
+	public ResponseEntity<?> getTransactions(
+			@PathVariable @Parameter(description = "page number value, starts with 0") int pageNo, 
+			@PathVariable @Parameter(description = "page size defines the number of data that can be displayed in a pgae") int pageSize,
 			@RequestParam(name = "sortBy", required = false) Optional<SortParam> sortBy) throws InterruptedException, ExecutionException{
 		
 		// get the paged list of transactions

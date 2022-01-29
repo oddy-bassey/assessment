@@ -36,7 +36,7 @@ public class DbInitializer {
     private final TransactionService transactionService;
     private final InstallmentService installmentService;
     
-    // A helper method that runs immediately after dependency injection to initialize the Database with data
+    // A helper method that runs immediately after dependency injection to initialize the Database (H2 db) with data
 	@PostConstruct
 	public void uploadData() {
 		
